@@ -4,11 +4,10 @@ import os
 import requests
 from dotenv import load_dotenv
 
-
 BASE_URL = "https://v6.exchangerate-api.com/v6"
 
 
-# Gemmer en API-nøgle i .env, hvis brugeren sender --key ved kørsel.
+# Gemmer en API-nÃ¸gle i .env, hvis brugeren sender --key ved kÃ¸rsel.
 def save_key_if_provided(key: str | None) -> str | None:
     if not key:
         return None
@@ -19,7 +18,7 @@ def save_key_if_provided(key: str | None) -> str | None:
     return key
 
 
-# Finder API-nøglen: først fra CLI-argument, ellers fra .env-filen.
+# Finder API-nÃ¸glen: fÃ¸rst fra CLI-argument, ellers fra .env-filen.
 def get_api_key(cli_key: str | None) -> str | None:
     saved_key = save_key_if_provided(cli_key)
     if saved_key:
@@ -29,8 +28,10 @@ def get_api_key(cli_key: str | None) -> str | None:
     return os.getenv("API_KEY")
 
 
-# Kalder ExchangeRate API'et og returnerer det omregnede beløb.
-def convert_currency(api_key: str, from_currency: str, to_currency: str, amount: float) -> float:
+# Kalder ExchangeRate API'et og returnerer det omregnede belÃ¸b.
+def convert_currency(
+    api_key: str, from_currency: str, to_currency: str, amount: float
+) -> float:
     url = f"{BASE_URL}/{api_key}/pair/{from_currency}/{to_currency}/{amount}"
     response = requests.get(url, timeout=10)
     data = response.json()
@@ -41,11 +42,13 @@ def convert_currency(api_key: str, from_currency: str, to_currency: str, amount:
     return data["conversion_result"]
 
 
-# Starter CLI-programmet, læser argumenter, henter key og viser resultatet.
+# Starter CLI-programmet, defunerer arguments, henter key og viser resultatet.
 def main():
     parser = argparse.ArgumentParser(description="Currency Converter CLI")
     parser.add_argument("--key", help="Your API key")
-    parser.add_argument("--from_currency", required=True, help="Currency to convert from")
+    parser.add_argument(
+        "--from_currency", required=True, help="Currency to convert from"
+    )
     parser.add_argument("--to_currency", required=True, help="Currency to convert to")
     parser.add_argument("--amount", type=float, required=True, help="Amount to convert")
 
@@ -63,7 +66,9 @@ def main():
         args.amount,
     )
 
-    print(f"{args.amount:.2f} {args.from_currency.upper()} = {result:.2f} {args.to_currency.upper()}")
+    print(
+        f"{args.amount:.2f} {args.from_currency.upper()} = {result:.2f} {args.to_currency.upper()}"
+    )
 
 
 if __name__ == "__main__":
